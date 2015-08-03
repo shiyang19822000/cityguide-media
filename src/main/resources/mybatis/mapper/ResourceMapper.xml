@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ResourceDao">
+
+	<resultMap id="resourceResult" type="Resource">
+		<id property="id" column="id" />
+		<result property="type" column="type" />
+		<result property="name" column="name" />
+		<result property="key" column="key" />
+		<result property="createTime" column="createTime" />
+	</resultMap>
+
+	<insert id="create" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into Resource values (#{nodeId}, #{type}, #{name}, #{key}, sysdate)
+	</insert>
+
+	<delete id="delete">
+		delete from Resource where id = #{id}
+	</delete>
+
+	<update id="update">
+		update Resource set nodeId = #{nodeId}, type = #{type} where id = #{id}
+	</update>
+
+	<select id="countByNodeId" resultType="int">
+		select count(*) from Resource where nodeId = #{nodeId}
+	</select>
+	
+	<select id="find" resultMap="resourceResult">
+		<bind name="namePattern" value="'%' + _parameter.getName() + '%'" />
+		select id, type,  name, key, createTime from Resource
+		<where>
+			<if test="nodeId != null">
+				nodeId = #{nodeId}
+			</if>
+			<if test="type != null">
+				type = #{type}
+			</if>
+			<if test="name != null">
+				name like #{namePattern}
+			</if>
+			<if test="startTime != null and endTime != null">
+				createTime between #{startTime} and #{endTime}
+			</if>
+		</where>
+	</select>
+	
+</mapper>
