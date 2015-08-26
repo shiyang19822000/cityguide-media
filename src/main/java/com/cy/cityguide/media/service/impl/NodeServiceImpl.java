@@ -50,7 +50,6 @@ public class NodeServiceImpl implements NodeService {
 		if (name.trim().length() == 0) {
 			throw new BadRequestBusinessException("失败," + JSON.toJSONString(node) + ",name.length=0");
 		}
-		System.err.println(node);
 		
 		if(node.getId()==null || "".equals(node.getId())){
 			if(nodeDao.findByName(name).size()>0){
@@ -104,7 +103,6 @@ public class NodeServiceImpl implements NodeService {
 			throw new BadRequestBusinessException("失败,parameter.size==0");
 		}
 		for (Long id : ids) {
-			System.err.println("id="+id);
 			if(id ==null || id.equals("") || id.toString().trim().length()==0){
 				throw new BadRequestBusinessException("失败,节点" + id + "null");
 			}

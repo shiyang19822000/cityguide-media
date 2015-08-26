@@ -175,7 +175,6 @@ public class ResourceServiceImpl implements ResourceService {
 	@Override
 	public List<Resource> find(FindResourceParameter parameter) throws BadRequestBusinessException {
 		logger.debug("parameter=" + parameter);
-		System.err.println(parameter);
 		if (parameter.getOffset() == null || parameter.getOffset().trim().equals("")) {
 			throw new BadRequestBusinessException("失败,offset=null");
 		}
