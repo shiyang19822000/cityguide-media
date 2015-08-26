@@ -11,7 +11,7 @@
 	</resultMap>
 
 	<insert id="create" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-		insert into Node values (#{parentId}, #{name}, sysdate)
+		insert into Node (parentId,name,createTime) values (#{parentId}, #{name}, now())
 	</insert>
 
 	<delete id="delete">
@@ -31,11 +31,15 @@
 	</select>
 	
 	<select id="findByParentIdAndName" resultType="Node">
-		select id, name, createTime from Node where parentId = #{id} and name = #{name}
+		select id, name, createTime from Node where parentId != #{id} and name = #{name}
 	</select>
 
 	<select id="findChildren" resultMap="nodeResult">
 		select id, name, createTime from Node where parentId = #{id}
+	</select>
+	
+	<select id="findByName" resultType="Node">
+		select * from Node where name = #{name}
 	</select>
 	
 </mapper>

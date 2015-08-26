@@ -1,7 +1,6 @@
 package com.cy.cityguide.media.parameter;
 
 import java.util.Date;
-import java.util.List;
 
 public class FindResourceParameter {
 
@@ -11,13 +10,13 @@ public class FindResourceParameter {
 
 	private String name;
 
-	private List<String> tags;
+	private String tag;
 
 	private Date startTime;
 
 	private Date endTime;
 
-	private Integer offset;
+	private String offset;
 
 	public Long getNodeId() {
 		return nodeId;
@@ -43,12 +42,13 @@ public class FindResourceParameter {
 		this.name = name;
 	}
 
-	public List<String> getTags() {
-		return tags;
+
+	public String getTag() {
+		return tag;
 	}
 
-	public void setTags(List<String> tags) {
-		this.tags = tags;
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
 
 	public Date getStartTime() {
@@ -67,12 +67,37 @@ public class FindResourceParameter {
 		this.endTime = endTime;
 	}
 
-	public Integer getOffset() {
+
+
+
+	public String getOffset() {
 		return offset;
 	}
 
-	public void setOffset(Integer offset) {
+	public void setOffset(String offset) {
 		this.offset = offset;
 	}
 
+	public FindResourceParameter(Long nodeId, Integer type, String name, String tag, Date startTime, Date endTime,
+		String offset) {
+		super();
+		this.nodeId = nodeId;
+		this.type = type;
+		this.name = name;
+		this.tag = tag;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.offset = offset;
+	}
+
+	public FindResourceParameter() {
+		super();
+	}
+
+	@Override
+	public String toString() {
+		return "FindResourceParameter [nodeId=" + nodeId + ", type=" + type + ", name=" + name + ", tag=" + tag
+				+ ", startTime=" + startTime + ", endTime=" + endTime + ", offset=" + offset + "]";
+	}
+	
 }

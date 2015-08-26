@@ -1,5 +1,7 @@
 package com.cy.cityguide.media.dao.impl;
 
+import java.util.List;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -20,7 +22,13 @@ public class ResourceTagDaoImpl implements ResourceTagDao {
 
 	@Override
 	public void deleteByResourceId(Long resourceId) {
-		sqlSessionTemplate.delete("ResourceTagDao.delete", resourceId);
+		sqlSessionTemplate.delete("ResourceTagDao.deleteByResourceId", resourceId);
+	}
+
+	@Override
+	public List<String> findTagIdsByResourceId(Long resourceId) {
+		List<String> tagIds = sqlSessionTemplate.selectList("ResourceTagDao.findByResourceId", resourceId);
+		return tagIds;
 	}
 
 }

@@ -23,17 +23,18 @@ public class NodeController {
 	private NodeService nodeService;
 
 	@RequestMapping(value = "node", method = RequestMethod.POST)
+	@ResponseBody
 	public void create(@RequestBody List<CreateNodeParameter> nodes)
 			throws BadRequestBusinessException {
 		nodeService.create(nodes);
 	}
-
+	@ResponseBody
 	@RequestMapping(value = "node", method = RequestMethod.DELETE)
 	public void delete(@RequestBody List<Long> ids)
 			throws BadRequestBusinessException {
 		nodeService.delete(ids);
 	}
-
+	@ResponseBody
 	@RequestMapping(value = "node", method = RequestMethod.PUT)
 	public void update(@RequestBody List<UpdateNodeParameter> nodes)
 			throws BadRequestBusinessException {

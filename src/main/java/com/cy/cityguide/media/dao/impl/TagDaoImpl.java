@@ -21,7 +21,7 @@ public class TagDaoImpl implements TagDao {
 
 	@Override
 	public Tag findByName(String name) {
-		return sqlSessionTemplate.selectOne("TagDao.count", name);
+		return sqlSessionTemplate.selectOne("TagDao.findByName", name);
 	}
 
 }

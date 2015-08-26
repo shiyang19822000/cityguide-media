@@ -1,12 +1,15 @@
 package com.cy.cityguide.media.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cy.cityguide.media.exception.BadRequestBusinessException;
@@ -21,19 +24,19 @@ public class ResourceController {
 
 	@Autowired
 	private ResourceService resourceService;
-
+	@ResponseBody
 	@RequestMapping(value = "resource", method = RequestMethod.POST)
 	public void create(@RequestBody List<CreateResourceParameter> resources)
 			throws BadRequestBusinessException {
 		resourceService.create(resources);
 	}
-
+	@ResponseBody
 	@RequestMapping(value = "resource", method = RequestMethod.DELETE)
 	public void delete(@RequestBody List<Long> ids)
 			throws BadRequestBusinessException {
 		resourceService.delete(ids);
 	}
-
+	@ResponseBody
 	@RequestMapping(value = "resource", method = RequestMethod.PUT)
 	public void update(@RequestBody List<UpdateResourceParameter> resources)
 			throws BadRequestBusinessException {
@@ -41,9 +44,15 @@ public class ResourceController {
 	}
 
 	@RequestMapping(value = "resource", method = RequestMethod.GET)
-	public @ResponseBody List<Resource> find(@RequestBody FindResourceParameter parameter)
+	public @ResponseBody List<Resource> find(@RequestParam Long nodeId,@RequestParam  Integer type,
+			@RequestParam String name, @RequestParam String tag,
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startTime,
+			@RequestParam @DateTimeFormat(pattern ="yyyy-MM-dd") Date endTime,
+			@RequestParam String offset)
 			throws BadRequestBusinessException {
-		return resourceService.find(parameter);
+		FindResourceParameter parameter = new FindResourceParameter(nodeId, type, name,tag, startTime, endTime, offset);
+		List<Resource> res=resourceService.find(parameter);
+		return res;
 	}
 
 }

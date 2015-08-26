@@ -10,7 +10,7 @@ public class Resource {
 
 	private String name;
 
-	private String key;
+	private String keyWord;
 
 	private Date createTime;
 
@@ -38,13 +38,14 @@ public class Resource {
 		this.name = name;
 	}
 
-	public String getKey() {
-		return key;
+	public String getKeyWord() {
+		return keyWord;
 	}
 
-	public void setKey(String key) {
-		this.key = key;
+	public void setKeyWord(String keyWord) {
+		this.keyWord = keyWord;
 	}
+
 
 	public Date getCreateTime() {
 		return createTime;
@@ -53,5 +54,12 @@ public class Resource {
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
+
+	@Override
+	public String toString() {
+		return "Resource [id=" + id + ", type=" + type + ", name=" + name + ", keyWord=" + keyWord + ", createTime="
+				+ createTime + "]";
+	}
+	
 
 }

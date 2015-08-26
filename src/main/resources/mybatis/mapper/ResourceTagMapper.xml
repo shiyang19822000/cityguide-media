@@ -5,11 +5,15 @@
 <mapper namespace="ResourceTagDao">
 
 	<insert id="create" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-		insert into ResourceTag values (#{resourceId}, #{tagId}, sysdate)
+		insert into ResourceTag (resourceId,tagId,createTime) values (#{resourceId}, #{tagId}, now())
 	</insert>
 
 	<delete id="deleteByResourceId">
 		delete from ResourceTag where resourceId = #{resourceId}
 	</delete>
+	
+	<select id="findByResourceId">
+		select id from ResourceTag where resourceId =#{resourceId}
+	</select>
 	
 </mapper>

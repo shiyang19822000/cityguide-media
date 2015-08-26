@@ -22,5 +22,7 @@ public interface NodeDao {
 	Node findByParentIdAndName(FindNodeByParentIdAndNameParameter parameter);
 
 	List<Node> findChildren(Long id);
-
+	
+	List<Node> findByName(String name);
+	
 }

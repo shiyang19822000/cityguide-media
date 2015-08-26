@@ -32,4 +32,11 @@ public class CreateNodeParameter {
 		this.parentId = parentId;
 	}
 
+	@Override
+	public String toString() {
+		return "CreateNodeParameter [id=" + id + ", name=" + name + ", parentId=" + parentId + "]";
+	}
+	
+	
+
 }

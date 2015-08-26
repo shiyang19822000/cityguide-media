@@ -13,7 +13,6 @@ import com.alibaba.fastjson.JSON;
 import com.cy.cityguide.media.constant.Constant;
 import com.cy.cityguide.media.dao.NodeDao;
 import com.cy.cityguide.media.dao.ResourceDao;
-import com.cy.cityguide.media.dao.parameter.FindNodeByParentIdAndNameParameter;
 import com.cy.cityguide.media.exception.BadRequestBusinessException;
 import com.cy.cityguide.media.parameter.CreateNodeParameter;
 import com.cy.cityguide.media.parameter.UpdateNodeParameter;
@@ -35,6 +34,12 @@ public class NodeServiceImpl implements NodeService {
 	private void validateCreateOrUpdateParameter(CreateNodeParameter node) 
 			throws BadRequestBusinessException {
 		Long parentId = node.getParentId();
+		if(parentId == null || parentId.toString().trim().equals("")){
+			throw new BadRequestBusinessException("失败,"+JSON.toJSONString(node)+",父节点不能为空");
+		}
+		if(parentId+"".trim().length()==0){
+			throw new BadRequestBusinessException("失败,"+JSON.toJSONString(node)+",父节点的ID不能为空字符串");
+		}
 		if (parentId != null && nodeDao.findById(parentId) == null) {
 			throw new BadRequestBusinessException("失败," + JSON.toJSONString(node) + ",父节点不存在");
 		}
@@ -45,9 +50,20 @@ public class NodeServiceImpl implements NodeService {
 		if (name.trim().length() == 0) {
 			throw new BadRequestBusinessException("失败," + JSON.toJSONString(node) + ",name.length=0");
 		}
-		if (nodeDao.findByParentIdAndName(new FindNodeByParentIdAndNameParameter(parentId, name)) != null) {
-			throw new BadRequestBusinessException("失败," + JSON.toJSONString(node) + ",名称已存在");
+		System.err.println(node);
+		
+		if(node.getId()==null || "".equals(node.getId())){
+			if(nodeDao.findByName(name).size()>0){
+				throw new BadRequestBusinessException("失败，"+JSON.toJSONString(node)+",名称已存在");
+			}
+		}else{
+			if(!name.equalsIgnoreCase(nodeDao.findById(node.getId()).getName())){
+				if (!nodeDao.findByName(name).isEmpty() && nodeDao.findByName(name).size()>0) {
+					throw new BadRequestBusinessException("失败," + JSON.toJSONString(node) + ",名称已存在");
+				}
+			}
 		}
+			
 	}
 	
 	@Override
@@ -55,6 +71,9 @@ public class NodeServiceImpl implements NodeService {
 			throws BadRequestBusinessException {
 		logger.debug("nodes=" + nodes);
 		if (nodes == null) {
+			throw new BadRequestBusinessException("失败,parameter=null");
+		}
+		if(nodes.isEmpty()){
 			throw new BadRequestBusinessException("失败,parameter=null");
 		}
 		if (nodes.size() == 0) {
@@ -78,10 +97,17 @@ public class NodeServiceImpl implements NodeService {
 		if (ids == null) {
 			throw new BadRequestBusinessException("失败,parameter=null");
 		}
+		if (ids.isEmpty()) {
+			throw new BadRequestBusinessException("失败,parameter=null");
+		}
 		if (ids.size() == 0) {
 			throw new BadRequestBusinessException("失败,parameter.size==0");
 		}
 		for (Long id : ids) {
+			System.err.println("id="+id);
+			if(id ==null || id.equals("") || id.toString().trim().length()==0){
+				throw new BadRequestBusinessException("失败,节点" + id + "null");
+			}
 			if (id == Constant.ROOT_NODE) {
 				throw new BadRequestBusinessException("失败,节点" + id + "为根节点");
 			}
@@ -90,6 +116,9 @@ public class NodeServiceImpl implements NodeService {
 			}
 			if (resourceDao.countByNodeId(id) > 0) {
 				throw new BadRequestBusinessException("失败,节点" + id + "有关联的资源");
+			}
+			if(nodeDao.findById(id)==null || nodeDao.findById(id).equals(null)){
+				throw new BadRequestBusinessException("失败,节点"+id+"不存在");
 			}
 		}
 		for (Long id : ids) {
@@ -109,8 +138,11 @@ public class NodeServiceImpl implements NodeService {
 		}
 		for (UpdateNodeParameter node : nodes) {
 			Long id = node.getId();
-			if (id == null) {
+			if (id == null || id.toString().trim().equals("")) {
 				throw new BadRequestBusinessException("失败," + JSON.toJSONString(node) + ",id=null");
+			}
+			if(nodeDao.findById(id)==null || nodeDao.findById(id).equals(null)){
+				throw new BadRequestBusinessException("失败,"+JSON.toJSONString(node)+",节点id="+id+"不存在");
 			}
 			validateCreateOrUpdateParameter(node);
 		}
@@ -126,7 +158,7 @@ public class NodeServiceImpl implements NodeService {
 	public List<Node> findChildren(Long id) 
 			throws BadRequestBusinessException {
 		logger.debug(new StringBuilder().append("id=").append(id).toString());
-		if (id == null) {
+		if (id == null || id.toString().trim().equals("")) {
 			throw new BadRequestBusinessException("失败,parameter=null");
 		}
 		return nodeDao.findChildren(id);

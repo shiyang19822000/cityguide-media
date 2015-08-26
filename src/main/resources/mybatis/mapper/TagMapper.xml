@@ -11,7 +11,7 @@
 	</resultMap>
 
 	<insert id="create" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-		insert into Tag values (#{name}, sysdate)
+		insert into Tag (name,createTime) values (#{name}, now())
 	</insert>
 
 	<select id="findByName" resultType="Tag">

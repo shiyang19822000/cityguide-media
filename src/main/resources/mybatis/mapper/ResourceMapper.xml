@@ -8,12 +8,12 @@
 		<id property="id" column="id" />
 		<result property="type" column="type" />
 		<result property="name" column="name" />
-		<result property="key" column="key" />
+		<result property="keyWord" column="keyWord" />
 		<result property="createTime" column="createTime" />
 	</resultMap>
 
 	<insert id="create" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-		insert into Resource values (#{nodeId}, #{type}, #{name}, #{key}, sysdate)
+		insert into Resource (nodeId,type,name,keyWord,createTime) values (#{nodeId}, #{type}, #{name},#{keyWord}, now())
 	</insert>
 
 	<delete id="delete">
@@ -21,7 +21,22 @@
 	</delete>
 
 	<update id="update">
-		update Resource set nodeId = #{nodeId}, type = #{type} where id = #{id}
+		UPDATE RESOURCE 
+		<set>
+			<if test="nodeId != null">
+				nodeId = #{nodeId},
+			</if>
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="keyWord !=null ">
+				keyWord = #{keyWord},
+			</if>
+		</set> 
+		WHERE ID = #{id}
 	</update>
 
 	<select id="countByNodeId" resultType="int">
@@ -30,19 +45,25 @@
 	
 	<select id="find" resultMap="resourceResult">
 		<bind name="namePattern" value="'%' + _parameter.getName() + '%'" />
-		select id, type,  name, key, createTime from Resource
+		SELECT DISTINCT R.ID, R.TYPE, R.NAME, R.KEYWORD, R.CREATETIME FROM RESOURCE R,
+		RESOURCETAG RT,TAG T 
 		<where>
-			<if test="nodeId != null">
-				nodeId = #{nodeId}
+			<if test="nodeId != null and nodeId !='' ">
+				R.NODEID = #{nodeId}
 			</if>
-			<if test="type != null">
-				type = #{type}
+			<if test="type != null and type !='' ">
+				AND R.TYPE = #{type}
 			</if>
-			<if test="name != null">
-				name like #{namePattern}
+			<if test="name != null  and name !='' and name.trim()!=''">
+				AND R.NAME LIKE #{namePattern}
 			</if>
-			<if test="startTime != null and endTime != null">
-				createTime between #{startTime} and #{endTime}
+			<if test="startTime != null and endTime != null and startTime.toString().trim()!='' and endTime.toString().trim()!=''">
+				AND R.CREATETIME BETWEEN #{startTime} AND #{endTime}
+			</if>
+			<if test="tag != null and tag!='' and tag.trim()!=''">
+				AND R.ID = RT.RESOURCEID
+				AND T.ID = RT.TAGID
+				AND T.NAME = #{tag}
 			</if>
 		</where>
 	</select>

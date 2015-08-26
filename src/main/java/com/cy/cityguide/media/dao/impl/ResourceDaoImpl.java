@@ -42,7 +42,8 @@ public class ResourceDaoImpl implements ResourceDao {
 
 	@Override
 	public List<Resource> find(FindResourceParameter parameter) {
-		RowBounds rowBounds = new RowBounds(parameter.getOffset(), Constant.LIMIT);
+		Integer offSet = Integer.parseInt(parameter.getOffset().trim());
+		RowBounds rowBounds = new RowBounds(offSet, Constant.LIMIT);
 		return sqlSessionTemplate.selectList("ResourceDao.find", parameter, rowBounds);
 	}
 
