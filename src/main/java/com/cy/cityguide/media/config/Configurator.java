@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.cychina.platform.id.GeneratorFactory;
+import com.cychina.platform.id.IdGenerator;
 
 @Configuration
 @EnableSpringConfigured
@@ -110,6 +112,13 @@ public class Configurator {
 			logger.error(e.getMessage(), e);
 			return null;
 		}
+	}
+	
+	@Bean(name= "idGenerator")
+	public IdGenerator idGenerator() {
+		IdGenerator idGenerator = GeneratorFactory.DEFAULT.create();
+		return idGenerator;		
+//		idGenerator.nextId().toString()
 	}
 
 }

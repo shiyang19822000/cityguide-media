@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class FindResourceParameter {
 
-	private Long nodeId;
+	private String nodeId;
 
 	private Integer type;
 
@@ -18,11 +18,12 @@ public class FindResourceParameter {
 
 	private String offset;
 
-	public Long getNodeId() {
+
+	public String getNodeId() {
 		return nodeId;
 	}
 
-	public void setNodeId(Long nodeId) {
+	public void setNodeId(String nodeId) {
 		this.nodeId = nodeId;
 	}
 
@@ -78,9 +79,8 @@ public class FindResourceParameter {
 		this.offset = offset;
 	}
 
-	public FindResourceParameter(Long nodeId, Integer type, String name, String tag, Date startTime, Date endTime,
+	public FindResourceParameter(String nodeId, Integer type, String name, String tag, Date startTime, Date endTime,
 		String offset) {
-		super();
 		this.nodeId = nodeId;
 		this.type = type;
 		this.name = name;
@@ -91,7 +91,6 @@ public class FindResourceParameter {
 	}
 
 	public FindResourceParameter() {
-		super();
 	}
 
 	@Override

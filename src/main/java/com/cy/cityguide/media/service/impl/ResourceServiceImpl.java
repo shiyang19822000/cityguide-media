@@ -25,6 +25,7 @@ import com.cy.cityguide.media.parameter.UpdateResourceParameter;
 import com.cy.cityguide.media.result.Resource;
 import com.cy.cityguide.media.result.Tag;
 import com.cy.cityguide.media.service.ResourceService;
+import com.cychina.platform.id.IdGenerator;
 
 @Service
 @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
@@ -43,44 +44,41 @@ public class ResourceServiceImpl implements ResourceService {
 
 	@Autowired
 	private ResourceTagDao resourceTagDao;
+	
+	@Autowired
+	private IdGenerator idGenerator;
 
 	private void validateCreateOrUpdateParameter(CreateResourceParameter resource) throws BadRequestBusinessException {
-		Long nodeId = resource.getNodeId();
-		if (nodeId == null || nodeId.toString().trim().equals("")) {
-			throw new BadRequestBusinessException("失败," + JSON.toJSONString(resource) + ",nodeId=null");
+		String nodeId = resource.getNodeId();
+		if (nodeId == null || nodeId.trim().equals("")) {
+			throw new BadRequestBusinessException("失败," + JSON.toJSONString(resource) + ",nodeId为空");
 		}
 		if (nodeDao.findById(nodeId) == null || nodeDao.findById(nodeId).equals(null)) {
 			throw new BadRequestBusinessException("失败," + JSON.toJSONString(resource) + ",节点不存在");
 		}
 		Integer type = resource.getType();
 		if (type == null || type.toString().trim().equals("")) {
-			throw new BadRequestBusinessException("失败," + JSON.toJSONString(resource) + ",type=null");
+			throw new BadRequestBusinessException("失败," + JSON.toJSONString(resource) + ",type为空");
 		}
 		if (type != ResourceType.TEXT && type != ResourceType.PICTURE && type != ResourceType.AUDIO
 				&& type != ResourceType.VIDEO) {
 			throw new BadRequestBusinessException("失败," + JSON.toJSONString(resource) + ",资源类型错误");
 		}
 		String name = resource.getName();
-		if (name == null || name.trim().equals("")) {
-			throw new BadRequestBusinessException("失败," + JSON.toJSONString(resource) + ",name=null");
-		}
-		if (name.trim().length() == 0) {
-			throw new BadRequestBusinessException("失败," + JSON.toJSONString(resource) + ",name.length=0");
+		if (name == null || name.trim().equals("") || name.trim().length() == 0) {
+			throw new BadRequestBusinessException("失败," + JSON.toJSONString(resource) + ",name为空");
 		}
 		String key = resource.getKeyWord();
-		if (key == null || key.trim().equals("")) {
-			throw new BadRequestBusinessException("失败," + JSON.toJSONString(resource) + ",key=null");
-		}
-		if (key.trim().length() == 0) {
-			throw new BadRequestBusinessException("失败," + JSON.toJSONString(resource) + ",key.length=0");
+		if (key == null || key.trim().equals("") || key.trim().length() == 0) {
+			throw new BadRequestBusinessException("失败," + JSON.toJSONString(resource) + ",key为空");
 		}
 		List<String> tagNames = resource.getTags();
 		if (tagNames != null && !tagNames.isEmpty() && tagNames.size() > 0) {
 			Integer size = tagNames.size();
 			for (int i = 0; i < size; i++) {
 				String tagName = tagNames.get(i);
-				if (tagName.trim().length() == 0) {
-					throw new BadRequestBusinessException("失败,tagName[" + (i + 1) + "].length=0");
+				if (tagName.trim().length() == 0 || tagName.trim().equals("")) {
+					throw new BadRequestBusinessException("失败,tagName[" + (i + 1) + "]为空");
 				}
 			}
 		}
@@ -89,25 +87,25 @@ public class ResourceServiceImpl implements ResourceService {
 	@Override
 	public void create(List<CreateResourceParameter> resources) throws BadRequestBusinessException {
 		logger.debug("resources=" + resources);
-		if (resources == null || resources.isEmpty()) {
-			throw new BadRequestBusinessException("失败,parameter=null");
-		}
-		if (resources.size() == 0) {
-			throw new BadRequestBusinessException("失败,parameter.size==0");
+		if (resources == null || resources.isEmpty() || resources.size() == 0) {
+			throw new BadRequestBusinessException("失败,parameter为空");
 		}
 		for (CreateResourceParameter resource : resources) {
 			validateCreateOrUpdateParameter(resource);
 		}
 		for (CreateResourceParameter resource : resources) {
+			resource.setId(idGenerator.next().toString());
 			resourceDao.create(resource);
 			List<String> tagNames = resource.getTags();
 			if (tagNames != null && !tagNames.isEmpty() && tagNames.size() > 0) {
 				for (String tagName : tagNames) {
 					CreateResourceTagParameter parameter = new CreateResourceTagParameter();
+					parameter.setId(idGenerator.next().toString());
 					parameter.setResourceId(resource.getId());
 					Tag tag = tagDao.findByName(tagName);
 					if (tag == null || tag.equals(null)) {
 						CreateTagParameter createTagParameter = new CreateTagParameter(tagName);
+						createTagParameter.setId(idGenerator.next().toString());
 						tagDao.create(createTagParameter);
 						parameter.setTagId(createTagParameter.getId());
 					} else {
@@ -120,15 +118,12 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	@Override
-	public void delete(List<Long> ids) throws BadRequestBusinessException {
+	public void delete(List<String> ids) throws BadRequestBusinessException {
 		logger.debug("ids" + ids);
-		if (ids == null || ids.isEmpty()) {
-			throw new BadRequestBusinessException("失败,parameter=null");
+		if (ids == null || ids.isEmpty() || ids.size()==0) {
+			throw new BadRequestBusinessException("失败,parameter为空");
 		}
-		if (ids.size() == 0) {
-			throw new BadRequestBusinessException("失败,parameter.size==0");
-		}
-		for (Long id : ids) {
+		for (String id : ids) {
 			resourceTagDao.deleteByResourceId(id);
 			resourceDao.delete(id);
 		}
@@ -137,16 +132,13 @@ public class ResourceServiceImpl implements ResourceService {
 	@Override
 	public void update(List<UpdateResourceParameter> resources) throws BadRequestBusinessException {
 		logger.debug("resources=" + resources);
-		if (resources == null || resources.isEmpty()) {
-			throw new BadRequestBusinessException("失败,parameter=null");
-		}
-		if (resources.size() == 0) {
-			throw new BadRequestBusinessException("失败,parameter.size==0");
+		if (resources == null || resources.isEmpty() || resources.size() == 0) {
+			throw new BadRequestBusinessException("失败,parameter为空");
 		}
 		for (UpdateResourceParameter resource : resources) {
-			Long id = resource.getId();
-			if (id == null || id.toString().trim().equals("")) {
-				throw new BadRequestBusinessException("失败," + JSON.toJSONString(resource) + ",id=null");
+			String id = resource.getId();
+			if (id == null || id.trim().equals("")) {
+				throw new BadRequestBusinessException("失败," + JSON.toJSONString(resource) + ",id为空");
 			}
 			validateCreateOrUpdateParameter(resource);
 		}
@@ -156,11 +148,13 @@ public class ResourceServiceImpl implements ResourceService {
 			if (tagNames != null && tagNames.size() > 0) {
 				resourceTagDao.deleteByResourceId(resource.getId());
 				CreateResourceTagParameter parameter = new CreateResourceTagParameter();
+				parameter.setId(idGenerator.next().toString());
 				parameter.setResourceId(resource.getId());
 				for (String tagName : tagNames) {
 					Tag tag = tagDao.findByName(tagName);
 					if (tag == null || "".equals(tag)) {
 						CreateTagParameter createTagParameter = new CreateTagParameter(tagName);
+						createTagParameter.setId(idGenerator.next().toString());
 						tagDao.create(createTagParameter);
 						parameter.setTagId(createTagParameter.getId());
 					} else {
@@ -176,7 +170,7 @@ public class ResourceServiceImpl implements ResourceService {
 	public List<Resource> find(FindResourceParameter parameter) throws BadRequestBusinessException {
 		logger.debug("parameter=" + parameter);
 		if (parameter.getOffset() == null || parameter.getOffset().trim().equals("")) {
-			throw new BadRequestBusinessException("失败,offset=null");
+			throw new BadRequestBusinessException("失败,offset为空");
 		}
 		Pattern pattern = Pattern.compile("[0-9]*");
 		if(!pattern.matcher(parameter.getOffset().trim()).matches()){
@@ -186,4 +180,13 @@ public class ResourceServiceImpl implements ResourceService {
 		return res;
 	}
 
+	@Override
+	public Resource findResById(String id) throws BadRequestBusinessException {
+		if(id == null || "".equals(id.trim())){
+			throw new BadRequestBusinessException("失败,parameter为空");
+		}
+		Resource resource = resourceDao.findResById(id);
+		return resource;
+	}
+	
 }

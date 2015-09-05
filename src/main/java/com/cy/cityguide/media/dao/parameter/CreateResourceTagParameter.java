@@ -2,37 +2,39 @@ package com.cy.cityguide.media.dao.parameter;
 
 public class CreateResourceTagParameter {
 
-	private Long id;
+	private String id;
 
-	private Long resourceId;
+	private String resourceId;
 
-	private Long tagId;
+	private String tagId;
 
 	public CreateResourceTagParameter() {
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
-	public Long getResourceId() {
+	public String getResourceId() {
 		return resourceId;
 	}
 
-	public void setResourceId(Long resourceId) {
+	public void setResourceId(String resourceId) {
 		this.resourceId = resourceId;
 	}
 
-	public Long getTagId() {
+	public String getTagId() {
 		return tagId;
 	}
 
-	public void setTagId(Long tagId) {
+	public void setTagId(String tagId) {
 		this.tagId = tagId;
 	}
+
+	
 
 }

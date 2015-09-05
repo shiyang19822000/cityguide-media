@@ -12,13 +12,13 @@ public interface NodeService {
 	void create(List<CreateNodeParameter> nodes)
 			throws BadRequestBusinessException;
 
-	void delete(List<Long> ids) 
+	void delete(List<String> ids) 
 			throws BadRequestBusinessException;
 
 	void update(List<UpdateNodeParameter> nodes)
 			throws BadRequestBusinessException;
 
-	List<Node> findChildren(Long id) 
+	List<Node> findChildren(String id) 
 			throws BadRequestBusinessException;
 
 }

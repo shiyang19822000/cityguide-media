@@ -10,8 +10,8 @@
 		<result property="createTime" column="createTime" />
 	</resultMap>
 
-	<insert id="create" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-		insert into Node (parentId,name,createTime) values (#{parentId}, #{name}, now())
+	<insert id="create">
+		insert into Node (id,parentId,name,createTime) values (#{id},#{parentId}, #{name}, now())
 	</insert>
 
 	<delete id="delete">
@@ -22,18 +22,14 @@
 		update Node set parentId = #{parentId}, name = #{name} where id = #{id} 
 	</update> 
 
-	<select id="countChildren" resultType="int">
-		select count(*) from Node where parentId = #{id}
+	<select id="countChildren" resultType="Integer">
+		select count(1) from Node where parentId = #{id}
 	</select>
 
 	<select id="findById" resultType="Node">
 		select id, name, createTime from Node where id = #{id}
 	</select>
 	
-	<select id="findByParentIdAndName" resultType="Node">
-		select id, name, createTime from Node where parentId != #{id} and name = #{name}
-	</select>
-
 	<select id="findChildren" resultMap="nodeResult">
 		select id, name, createTime from Node where parentId = #{id}
 	</select>

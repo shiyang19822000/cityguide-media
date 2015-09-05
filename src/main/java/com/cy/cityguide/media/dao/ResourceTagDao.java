@@ -8,7 +8,7 @@ public interface ResourceTagDao {
 
 	void create(CreateResourceTagParameter parameter);
 
-	void deleteByResourceId(Long resourceId);
+	void deleteByResourceId(String resourceId);
 	
-	List<String> findTagIdsByResourceId(Long resourceId);
+	List<String> findTagIdsByResourceId(String resourceId);
 }

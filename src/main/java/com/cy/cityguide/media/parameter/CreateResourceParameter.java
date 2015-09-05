@@ -4,9 +4,9 @@ import java.util.List;
 
 public class CreateResourceParameter {
 
-	private Long id;
+	private String id;
 
-	private Long nodeId;
+	private String nodeId;
 
 	private Integer type;
 
@@ -16,20 +16,19 @@ public class CreateResourceParameter {
 
 	private List<String> tags;
 	
-
-	public Long getNodeId() {
-		return nodeId;
-	}
-
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
-	public void setNodeId(Long nodeId) {
+	public String getNodeId() {
+		return nodeId;
+	}
+
+	public void setNodeId(String nodeId) {
 		this.nodeId = nodeId;
 	}
 

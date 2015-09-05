@@ -11,12 +11,14 @@ public interface ResourceDao {
 
 	void create(CreateResourceParameter resource);
 
-	void delete(Long id);
+	void delete(String id);
 
 	void update(UpdateResourceParameter resource);
 
-	Integer countByNodeId(Long nodeId);
+	Integer countByNodeId(String nodeId);
 
 	List<Resource> find(FindResourceParameter parameter);
+	
+	public Resource findResById(String id);
 
 }

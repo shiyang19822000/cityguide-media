@@ -13,13 +13,16 @@ public interface ResourceService {
 	void create(List<CreateResourceParameter> resources)
 			throws BadRequestBusinessException;
 
-	void delete(List<Long> ids) 
+	void delete(List<String> ids) 
 			throws BadRequestBusinessException;
 
 	void update(List<UpdateResourceParameter> resources)
 			throws BadRequestBusinessException;
 
 	List<Resource> find(FindResourceParameter parameter)
+			throws BadRequestBusinessException;
+	
+	Resource findResById(String id) 
 			throws BadRequestBusinessException;
 
 }

@@ -26,7 +26,7 @@ public class ResourceDaoImpl implements ResourceDao {
 	}
 
 	@Override
-	public void delete(Long id) {
+	public void delete(String id) {
 		sqlSessionTemplate.delete("ResourceDao.delete", id);
 	}
 
@@ -36,7 +36,7 @@ public class ResourceDaoImpl implements ResourceDao {
 	}
 
 	@Override
-	public Integer countByNodeId(Long nodeId) {
+	public Integer countByNodeId(String nodeId) {
 		return sqlSessionTemplate.selectOne("ResourceDao.countByNodeId", nodeId);
 	}
 
@@ -45,6 +45,12 @@ public class ResourceDaoImpl implements ResourceDao {
 		Integer offSet = Integer.parseInt(parameter.getOffset().trim());
 		RowBounds rowBounds = new RowBounds(offSet, Constant.LIMIT);
 		return sqlSessionTemplate.selectList("ResourceDao.find", parameter, rowBounds);
+	}
+
+	@Override
+	public Resource findResById(String id) {
+		Resource res = sqlSessionTemplate.selectOne("ResourceDao.findById",id);
+		return res;
 	}
 
 }

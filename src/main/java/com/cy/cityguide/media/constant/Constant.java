@@ -2,7 +2,7 @@ package com.cy.cityguide.media.constant;
 
 public class Constant {
 
-	public static final Long ROOT_NODE = 4L;
+	public static final String ROOT_NODE = "root";
 	public static final Integer LIMIT = 15;
 
 	public static class ResourceType {

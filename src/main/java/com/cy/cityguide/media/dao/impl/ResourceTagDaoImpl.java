@@ -21,12 +21,12 @@ public class ResourceTagDaoImpl implements ResourceTagDao {
 	}
 
 	@Override
-	public void deleteByResourceId(Long resourceId) {
+	public void deleteByResourceId(String resourceId) {
 		sqlSessionTemplate.delete("ResourceTagDao.deleteByResourceId", resourceId);
 	}
 
 	@Override
-	public List<String> findTagIdsByResourceId(Long resourceId) {
+	public List<String> findTagIdsByResourceId(String resourceId) {
 		List<String> tagIds = sqlSessionTemplate.selectList("ResourceTagDao.findByResourceId", resourceId);
 		return tagIds;
 	}

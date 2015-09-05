@@ -12,8 +12,8 @@
 		<result property="createTime" column="createTime" />
 	</resultMap>
 
-	<insert id="create" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-		insert into Resource (nodeId,type,name,keyWord,createTime) values (#{nodeId}, #{type}, #{name},#{keyWord}, now())
+	<insert id="create">
+		insert into Resource (id,nodeId,type,name,keyWord,createTime) values (#{id},#{nodeId}, #{type}, #{name},#{keyWord}, now())
 	</insert>
 
 	<delete id="delete">
@@ -39,8 +39,8 @@
 		WHERE ID = #{id}
 	</update>
 
-	<select id="countByNodeId" resultType="int">
-		select count(*) from Resource where nodeId = #{nodeId}
+	<select id="countByNodeId" resultType="Integer">
+		select count(1) from Resource where nodeId = #{nodeId}
 	</select>
 	
 	<select id="find" resultMap="resourceResult">
@@ -66,6 +66,10 @@
 				AND T.NAME = #{tag}
 			</if>
 		</where>
+	</select>
+	
+	<select id="findById" resultType="Resource">
+		select id,type,name,keyword,createtime from resource where id = #{id}
 	</select>
 	
 </mapper>

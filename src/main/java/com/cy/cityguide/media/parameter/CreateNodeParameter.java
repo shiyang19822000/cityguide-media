@@ -2,17 +2,17 @@ package com.cy.cityguide.media.parameter;
 
 public class CreateNodeParameter {
 
-	private Long id;
+	private String id;
 
 	private String name;
 
-	private Long parentId;
+	private String parentId;
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -24,11 +24,11 @@ public class CreateNodeParameter {
 		this.name = name;
 	}
 
-	public Long getParentId() {
+	public String getParentId() {
 		return parentId;
 	}
 
-	public void setParentId(Long parentId) {
+	public void setParentId(String parentId) {
 		this.parentId = parentId;
 	}
 

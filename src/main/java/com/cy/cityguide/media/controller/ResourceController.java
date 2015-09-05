@@ -24,35 +24,42 @@ public class ResourceController {
 
 	@Autowired
 	private ResourceService resourceService;
+
 	@ResponseBody
 	@RequestMapping(value = "resource", method = RequestMethod.POST)
-	public void create(@RequestBody List<CreateResourceParameter> resources)
-			throws BadRequestBusinessException {
+	public void create(@RequestBody List<CreateResourceParameter> resources) throws BadRequestBusinessException {
 		resourceService.create(resources);
 	}
+
 	@ResponseBody
 	@RequestMapping(value = "resource", method = RequestMethod.DELETE)
-	public void delete(@RequestBody List<Long> ids)
-			throws BadRequestBusinessException {
+	public void delete(@RequestBody List<String> ids) throws BadRequestBusinessException {
 		resourceService.delete(ids);
 	}
+
 	@ResponseBody
 	@RequestMapping(value = "resource", method = RequestMethod.PUT)
-	public void update(@RequestBody List<UpdateResourceParameter> resources)
-			throws BadRequestBusinessException {
+	public void update(@RequestBody List<UpdateResourceParameter> resources) throws BadRequestBusinessException {
 		resourceService.update(resources);
 	}
 
 	@RequestMapping(value = "resource", method = RequestMethod.GET)
-	public @ResponseBody List<Resource> find(@RequestParam Long nodeId,@RequestParam  Integer type,
+	public @ResponseBody List<Resource> find(@RequestParam String nodeId, @RequestParam Integer type,
 			@RequestParam String name, @RequestParam String tag,
 			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startTime,
-			@RequestParam @DateTimeFormat(pattern ="yyyy-MM-dd") Date endTime,
-			@RequestParam String offset)
-			throws BadRequestBusinessException {
-		FindResourceParameter parameter = new FindResourceParameter(nodeId, type, name,tag, startTime, endTime, offset);
-		List<Resource> res=resourceService.find(parameter);
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endTime, @RequestParam String offset)
+					throws BadRequestBusinessException {
+		FindResourceParameter parameter = new FindResourceParameter(nodeId, type, name, tag, startTime, endTime,
+				offset);
+		List<Resource> res = resourceService.find(parameter);
 		return res;
+	}
+
+	@RequestMapping(value = "res", method = RequestMethod.GET)
+	public @ResponseBody Resource findSingleResource(@RequestParam(value ="res-id")String id)
+			throws BadRequestBusinessException {
+		Resource resource = resourceService.findResById(id);
+		return resource;
 	}
 
 }

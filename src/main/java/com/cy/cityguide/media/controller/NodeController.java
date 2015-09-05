@@ -30,7 +30,7 @@ public class NodeController {
 	}
 	@ResponseBody
 	@RequestMapping(value = "node", method = RequestMethod.DELETE)
-	public void delete(@RequestBody List<Long> ids)
+	public void delete(@RequestBody List<String> ids)
 			throws BadRequestBusinessException {
 		nodeService.delete(ids);
 	}
@@ -42,7 +42,7 @@ public class NodeController {
 	}
 
 	@RequestMapping(value = "node/{id}/children", method = RequestMethod.GET)
-	public @ResponseBody List<Node> findChildren(@PathVariable(value = "id") Long id)
+	public @ResponseBody List<Node> findChildren(@PathVariable(value = "id") String id)
 			throws BadRequestBusinessException {
 		return nodeService.findChildren(id);
 	}

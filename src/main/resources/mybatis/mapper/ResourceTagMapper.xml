@@ -4,8 +4,8 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ResourceTagDao">
 
-	<insert id="create" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-		insert into ResourceTag (resourceId,tagId,createTime) values (#{resourceId}, #{tagId}, now())
+	<insert id="create">
+		insert into ResourceTag (id,resourceId,tagId,createTime) values (#{id},#{resourceId}, #{tagId}, now())
 	</insert>
 
 	<delete id="deleteByResourceId">

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.cy.cityguide.media.dao.NodeDao;
-import com.cy.cityguide.media.dao.parameter.FindNodeByParentIdAndNameParameter;
 import com.cy.cityguide.media.parameter.CreateNodeParameter;
 import com.cy.cityguide.media.parameter.UpdateNodeParameter;
 import com.cy.cityguide.media.result.Node;
@@ -24,7 +23,7 @@ public class NodeDaoImpl implements NodeDao {
 	}
 
 	@Override
-	public void delete(Long id) {
+	public void delete(String id) {
 		sqlSessionTemplate.delete("NodeDao.delete", id);
 	}
 
@@ -34,22 +33,17 @@ public class NodeDaoImpl implements NodeDao {
 	}
 
 	@Override
-	public Integer countChildren(Long id) {
+	public Integer countChildren(String id) {
 		return sqlSessionTemplate.selectOne("NodeDao.countChildren", id);
 	}
 
 	@Override
-	public Node findById(Long id) {
+	public Node findById(String id) {
 		return sqlSessionTemplate.selectOne("NodeDao.findById", id);
 	}
 
 	@Override
-	public Node findByParentIdAndName(FindNodeByParentIdAndNameParameter parameter) {
-		return sqlSessionTemplate.selectOne("NodeDao.findByParentIdAndName", parameter);
-	}
-	
-	@Override
-	public List<Node> findChildren(Long id) {
+	public List<Node> findChildren(String id) {
 		return sqlSessionTemplate.selectList("NodeDao.findChildren", id);
 	}
 

@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Resource {
 
-	private Long id;
+	private String id;
 
 	private Integer type;
 
@@ -14,11 +14,12 @@ public class Resource {
 
 	private Date createTime;
 
-	public Long getId() {
+
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
