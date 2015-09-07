@@ -6,6 +6,7 @@
 
 	<resultMap id="resourceResult" type="Resource">
 		<id property="id" column="id" />
+		<result property="nodeId" column="nodeId"/>
 		<result property="type" column="type" />
 		<result property="name" column="name" />
 		<result property="keyWord" column="keyWord" />
@@ -13,15 +14,15 @@
 	</resultMap>
 
 	<insert id="create">
-		insert into Resource (id,nodeId,type,name,keyWord,createTime) values (#{id},#{nodeId}, #{type}, #{name},#{keyWord}, now())
+		insert into MEDIA_RESOURCE (id,nodeId,type,name,keyWord,createTime) values (#{id},#{nodeId}, #{type}, #{name},#{keyWord}, now())
 	</insert>
 
 	<delete id="delete">
-		delete from Resource where id = #{id}
+		delete from MEDIA_RESOURCE where id = #{id}
 	</delete>
 
 	<update id="update">
-		UPDATE RESOURCE 
+		UPDATE MEDIA_RESOURCE 
 		<set>
 			<if test="nodeId != null">
 				nodeId = #{nodeId},
@@ -40,13 +41,12 @@
 	</update>
 
 	<select id="countByNodeId" resultType="Integer">
-		select count(1) from Resource where nodeId = #{nodeId}
+		select count(1) from MEDIA_RESOURCE where nodeId = #{nodeId}
 	</select>
 	
 	<select id="find" resultMap="resourceResult">
 		<bind name="namePattern" value="'%' + _parameter.getName() + '%'" />
-		SELECT DISTINCT R.ID, R.TYPE, R.NAME, R.KEYWORD, R.CREATETIME FROM RESOURCE R,
-		RESOURCETAG RT,TAG T 
+		SELECT DISTINCT R.ID,R.NODEID, R.TYPE, R.NAME, R.KEYWORD, R.CREATETIME FROM MEDIA_RESOURCE R
 		<where>
 			<if test="nodeId != null and nodeId !='' ">
 				R.NODEID = #{nodeId}
@@ -61,15 +61,13 @@
 				AND R.CREATETIME BETWEEN #{startTime} AND #{endTime}
 			</if>
 			<if test="tag != null and tag!='' and tag.trim()!=''">
-				AND R.ID = RT.RESOURCEID
-				AND T.ID = RT.TAGID
-				AND T.NAME = #{tag}
+				AND R.ID IN (SELECT RESOURCEID FROM MEDIA_RESOURCETAG WHERE TAGID IN(SELECT ID FROM MEDIA_TAG WHERE NAME = #{tag}))
 			</if>
 		</where>
 	</select>
 	
 	<select id="findById" resultType="Resource">
-		select id,type,name,keyword,createtime from resource where id = #{id}
+		select id,nodeid,type,name,keyword,createtime from MEDIA_RESOURCE where id = #{id}
 	</select>
 	
 </mapper>

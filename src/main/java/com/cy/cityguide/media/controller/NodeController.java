@@ -17,6 +17,7 @@ import com.cy.cityguide.media.result.Node;
 import com.cy.cityguide.media.service.NodeService;
 
 @Controller
+@RequestMapping(value = "/v1/media-service/")
 public class NodeController {
 
 	@Autowired

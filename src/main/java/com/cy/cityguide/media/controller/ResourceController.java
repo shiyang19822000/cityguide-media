@@ -20,6 +20,7 @@ import com.cy.cityguide.media.result.Resource;
 import com.cy.cityguide.media.service.ResourceService;
 
 @Controller
+@RequestMapping(value = "/v1/media-service/")
 public class ResourceController {
 
 	@Autowired

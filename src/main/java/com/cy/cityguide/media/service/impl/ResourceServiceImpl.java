@@ -70,7 +70,7 @@ public class ResourceServiceImpl implements ResourceService {
 		}
 		String key = resource.getKeyWord();
 		if (key == null || key.trim().equals("") || key.trim().length() == 0) {
-			throw new BadRequestBusinessException("失败," + JSON.toJSONString(resource) + ",key为空");
+			throw new BadRequestBusinessException("失败," + JSON.toJSONString(resource) + ",keyword为空");
 		}
 		List<String> tagNames = resource.getTags();
 		if (tagNames != null && !tagNames.isEmpty() && tagNames.size() > 0) {
@@ -177,6 +177,9 @@ public class ResourceServiceImpl implements ResourceService {
 			throw new BadRequestBusinessException("失败,offset不是数字");
 		}
 		List<Resource> res = resourceDao.find(parameter);
+		for (Resource resource : res) {
+			resource.setKeyWord(System.getenv("resource_host")+resource.getKeyWord());
+		}
 		return res;
 	}
 
@@ -186,6 +189,7 @@ public class ResourceServiceImpl implements ResourceService {
 			throw new BadRequestBusinessException("失败,parameter为空");
 		}
 		Resource resource = resourceDao.findResById(id);
+		resource.setKeyWord(System.getenv("resource_host") + resource.getKeyWord());
 		return resource;
 	}
 	

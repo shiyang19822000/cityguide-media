@@ -5,7 +5,9 @@ import java.util.Date;
 public class Resource {
 
 	private String id;
-
+	
+	private String nodeId;
+	
 	private Integer type;
 
 	private String name;
@@ -55,12 +57,13 @@ public class Resource {
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-
-	@Override
-	public String toString() {
-		return "Resource [id=" + id + ", type=" + type + ", name=" + name + ", keyWord=" + keyWord + ", createTime="
-				+ createTime + "]";
-	}
 	
+	public String getNodeId() {
+		return nodeId;
+	}
+
+	public void setNodeId(String nodeId) {
+		this.nodeId = nodeId;
+	}
 
 }

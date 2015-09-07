@@ -1,6 +1,5 @@
 package com.cy.cityguide.media.config;
 
-import java.io.IOException;
 import java.sql.SQLException;
 
 import javax.sql.DataSource;
@@ -17,11 +16,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.cychina.platform.id.GeneratorFactory;
@@ -30,7 +26,7 @@ import com.cychina.platform.id.IdGenerator;
 @Configuration
 @EnableSpringConfigured
 @EnableTransactionManagement
-@PropertySource(value = { "classpath:database.properties", "classpath:druid.properties", "classpath:global.properties" })
+@PropertySource(value = { "classpath:druid.properties"})
 @ComponentScan(basePackages = { "com.cy.cityguide.media.dao.impl", "com.cy.cityguide.media.service.impl", "com.cy.cityguide.media.exception" })
 public class Configurator {
 
@@ -49,9 +45,9 @@ public class Configurator {
 	public DruidDataSource createDruidDataSource() {
 		try {
 			DruidDataSource druidDataSource = new DruidDataSource();
-			druidDataSource.setUrl(environment.getProperty("database_url", String.class));
-			druidDataSource.setUsername(environment.getProperty("database_username", String.class));
-			druidDataSource.setPassword(environment.getProperty("database_password", String.class));
+			druidDataSource.setUrl(System.getenv("database_url"));
+			druidDataSource.setUsername(System.getenv("database_username"));
+			druidDataSource.setPassword(System.getenv("database_password"));
 			druidDataSource.setInitialSize(environment.getProperty("druid_initial_size", Integer.class));
 			druidDataSource.setMinIdle(environment.getProperty("druid_min_idle", Integer.class));
 			druidDataSource.setMaxActive(environment.getProperty("druid_max_active", Integer.class));
@@ -98,27 +94,10 @@ public class Configurator {
 		return dataSourceTransactionManager;
 	}
 	
-	@Bean(name = "multipartResolver")
-	public CommonsMultipartResolver createCommonsMultipartResolver() {
-		try {
-			CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-			commonsMultipartResolver.setDefaultEncoding(environment.getProperty("global_file_upload_defaultencoding", String.class));
-			commonsMultipartResolver.setMaxInMemorySize(environment.getProperty("global_file_upload_maxinmemorysize", Integer.class));
-			commonsMultipartResolver.setMaxUploadSize(environment.getProperty("global_file_upload_maxuploadsize", Long.class));
-			Resource uploadTempDir = new FileSystemResource(environment.getProperty("global_file_upload_uploadtempdir", String.class));
-			commonsMultipartResolver.setUploadTempDir(uploadTempDir);
-			return commonsMultipartResolver;
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-			return null;
-		}
-	}
-	
 	@Bean(name= "idGenerator")
 	public IdGenerator idGenerator() {
 		IdGenerator idGenerator = GeneratorFactory.DEFAULT.create();
 		return idGenerator;		
-//		idGenerator.nextId().toString()
 	}
 
 }

@@ -1,0 +1,301 @@
+
+swagger: "2.0"
+info:
+  title: City Guide Media Service API
+  description: Node And Resource API
+  version: 0.0.1
+host: localhost:8080
+basePath: /cityguide-media
+schemes:
+  - http
+produces:
+  - application/json
+consumes:
+  - application/json
+paths:
+  /node:
+    post:
+      description: 创建节点
+      parameters:
+        - name: nodes 
+          in: body
+          description: 创建节点参数
+          required: true
+          schema:
+            type: array
+            description: 节点参数
+            items:
+              $ref: "#/definitions/CreateNodeParameter"
+      responses:
+        200:
+          description: OK
+    delete:
+      description: 删除节点
+      parameters:
+        - name: ids 
+          in: body
+          description: 删除节点参数
+          required: true
+          schema:
+            type: array
+            description: 节点ID参数
+            items:
+              type: string
+              description: 节点ID
+      responses:
+        200:
+          description: OK
+    put:
+      description: 修改节点
+      parameters:
+        - name: nodes 
+          in: body
+          description: 修改节点参数
+          required: true
+          schema:
+            type: array
+            description: 节点参数
+            items:
+              $ref: "#/definitions/UpdateNodeParameter"
+      responses:
+        200:
+          description: OK
+  /node/{node-id}/children:
+    get:
+      description: 查找子节点
+      parameters:
+        - $ref: "#/parameters/node-id"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            description: 子节点
+            items:
+              $ref: "#/definitions/Node"
+  /resource:
+    post:
+      description: 创建资源
+      parameters:
+        - name: resources
+          in: body
+          description: 资源参数
+          required: true
+          schema:
+            type: array
+            description: 资源
+            items:
+              $ref: "#/definitions/CreateResourceParameter"
+      responses:
+        200:
+          description: OK
+    delete:
+      description: 删除资源
+      parameters:
+        - name: ids 
+          in: body
+          required: true
+          schema:
+            type: array
+            description: 删除资源参数
+            items:
+              type: string 
+              description: 资源ID
+      responses:
+        200:
+          description: OK
+    put:
+      description: 修改资源
+      parameters:
+        - name: nodes 
+          in: body
+          description: 修改资源参数
+          required: true
+          schema:
+            type: array
+            description: 资源
+            items:
+              $ref: "#/definitions/UpdateResourceParameter"
+      responses:
+        200:
+          description: OK
+    get:
+      description: 查找资源
+      parameters:
+        - name: nodeId 
+          in: query
+          description: 节点ID
+          type: string
+        - name: type
+          in: query
+          description: 节点类型
+          type: integer
+          format: int32
+        - name: name
+          in: query
+          description: 节点名称
+          type: string
+        - name: tag
+          in: query
+          description: 节点标签
+          type: string
+        - name: startTime
+          in: query
+          description: 开始时间如:yyyy-MM-dd
+          type: string
+          format: date-time
+        - name: endTime
+          description: 结束时间如:yyyy-MM-dd
+          in: query
+          type: string
+          format: date-time
+        - name: offset
+          description: 分页查询的起始位置,从0开始
+          in: query
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            description: 资源
+            items:
+              $ref: "#/definitions/Resource"
+  /res: 
+    get:
+      description: 查找单一资源
+      parameters:
+        - $ref: "#/parameters/res-id"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Resource"
+        
+definitions:
+  Node:
+    type: object
+    description: 节点
+    properties:
+      id:
+        type: string
+        description: id
+      name:
+        type: string
+        description: 名称
+      createTime:
+        type: string
+        format: date-time
+        description: 创建时间
+  CreateNodeParameter:
+    type: object
+    description: 参数
+    properties:
+      name:
+        type: string
+        description: 名称
+      parentId:
+        type: string
+        description: 父节点id
+  UpdateNodeParameter:
+    type: object
+    description: 参数
+    properties:
+      id:
+        type: string
+        description: id
+      name:
+        type: string
+        description: 名称
+      parentId:
+        type: string
+        description: 父节点id
+  Resource:
+    type: object
+    description: 资源
+    properties:
+      id:
+        type: string
+        description: id
+      nodeId:
+        type: string
+        description: nodeId
+      name:
+        type: string
+        description: 名称
+      type:
+        type: integer
+        format: int32
+        description: 类型  
+      keyWord:
+        type: string
+        description: keyWord  
+      createTime:
+        type: string
+        format: date-time
+        description: 创建时间
+  CreateResourceParameter:
+    type: object
+    description: 参数
+    properties:
+      nodeId:
+        type: string
+        description: nodeId  
+      type:
+        type: integer
+        format: int32
+        description: 类型  
+      name:
+        type: string
+        description: 名称
+      keyWord:
+        type: string
+        description: keyWord 
+      tags:
+        type: array
+        description: tags
+        items:
+          type: string
+          description: tag
+  UpdateResourceParameter:
+    type: object
+    description: 参数
+    properties:
+      id:
+        type: string
+        description: id
+      nodeId:
+        type: integer
+        format: int64
+        description: nodeId  
+      type:
+        type: integer
+        format: int32
+        description: 类型  
+      name:
+        type: string
+        description: 名称
+      keyWord:
+        type: string
+        description: keyWord  
+      tags:
+        type: array
+        description: tags
+        items:
+          type: string
+          description: tag
+parameters:
+  node-id:
+    name: node-id
+    in: path
+    description: 节点id
+    required: true
+    type: string
+  res-id: 
+    name: res-id
+    in: query
+    description: 资源id
+    required: true
+    type: string
+

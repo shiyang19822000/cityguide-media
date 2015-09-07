@@ -5,15 +5,15 @@
 <mapper namespace="ResourceTagDao">
 
 	<insert id="create">
-		insert into ResourceTag (id,resourceId,tagId,createTime) values (#{id},#{resourceId}, #{tagId}, now())
+		insert into MEDIA_RESOURCETAG (id,resourceId,tagId,createTime) values (#{id},#{resourceId}, #{tagId}, now())
 	</insert>
 
 	<delete id="deleteByResourceId">
-		delete from ResourceTag where resourceId = #{resourceId}
+		delete from MEDIA_RESOURCETAG where resourceId = #{resourceId}
 	</delete>
 	
 	<select id="findByResourceId">
-		select id from ResourceTag where resourceId =#{resourceId}
+		select id from MEDIA_RESOURCETAG where resourceId =#{resourceId}
 	</select>
 	
 </mapper>
