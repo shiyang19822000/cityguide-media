@@ -177,9 +177,6 @@ public class ResourceServiceImpl implements ResourceService {
 			throw new BadRequestBusinessException("失败,offset不是数字");
 		}
 		List<Resource> res = resourceDao.find(parameter);
-		for (Resource resource : res) {
-			resource.setKeyWord(System.getenv("resource_host")+resource.getKeyWord());
-		}
 		return res;
 	}
 
@@ -189,7 +186,6 @@ public class ResourceServiceImpl implements ResourceService {
 			throw new BadRequestBusinessException("失败,parameter为空");
 		}
 		Resource resource = resourceDao.findResById(id);
-		resource.setKeyWord(System.getenv("resource_host") + resource.getKeyWord());
 		return resource;
 	}
 	

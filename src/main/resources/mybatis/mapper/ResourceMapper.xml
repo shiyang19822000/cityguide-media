@@ -14,15 +14,15 @@
 	</resultMap>
 
 	<insert id="create">
-		insert into MEDIA_RESOURCE (id,nodeId,type,name,keyWord,createTime) values (#{id},#{nodeId}, #{type}, #{name},#{keyWord}, now())
+		insert into media_resource (id,nodeId,type,name,keyWord,createTime) values (#{id},#{nodeId}, #{type}, #{name},#{keyWord}, now())
 	</insert>
 
 	<delete id="delete">
-		delete from MEDIA_RESOURCE where id = #{id}
+		delete from media_resource where id = #{id}
 	</delete>
 
 	<update id="update">
-		UPDATE MEDIA_RESOURCE 
+		UPDATE media_resource 
 		<set>
 			<if test="nodeId != null">
 				nodeId = #{nodeId},
@@ -41,12 +41,12 @@
 	</update>
 
 	<select id="countByNodeId" resultType="Integer">
-		select count(1) from MEDIA_RESOURCE where nodeId = #{nodeId}
+		select count(1) from media_resource where nodeId = #{nodeId}
 	</select>
 	
 	<select id="find" resultMap="resourceResult">
 		<bind name="namePattern" value="'%' + _parameter.getName() + '%'" />
-		SELECT DISTINCT R.ID,R.NODEID, R.TYPE, R.NAME, R.KEYWORD, R.CREATETIME FROM MEDIA_RESOURCE R
+		SELECT DISTINCT R.ID,R.NODEID, R.TYPE, R.NAME, R.KEYWORD, R.CREATETIME FROM media_resource R
 		<where>
 			<if test="nodeId != null and nodeId !='' ">
 				R.NODEID = #{nodeId}
@@ -61,13 +61,13 @@
 				AND R.CREATETIME BETWEEN #{startTime} AND #{endTime}
 			</if>
 			<if test="tag != null and tag!='' and tag.trim()!=''">
-				AND R.ID IN (SELECT RESOURCEID FROM MEDIA_RESOURCETAG WHERE TAGID IN(SELECT ID FROM MEDIA_TAG WHERE NAME = #{tag}))
+				AND R.ID IN (SELECT RESOURCEID FROM media_resourcetag WHERE TAGID IN(SELECT ID FROM media_tag WHERE NAME = #{tag}))
 			</if>
 		</where>
 	</select>
 	
 	<select id="findById" resultType="Resource">
-		select id,nodeid,type,name,keyword,createtime from MEDIA_RESOURCE where id = #{id}
+		select id,nodeid,type,name,keyword,createtime from media_resource where id = #{id}
 	</select>
 	
 </mapper>

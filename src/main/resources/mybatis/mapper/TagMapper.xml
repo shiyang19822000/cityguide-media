@@ -11,11 +11,11 @@
 	</resultMap>
 
 	<insert id="create">
-		insert into MEDIA_TAG (id,name,createTime) values (#{id},#{name}, now())
+		insert into media_tag (id,name,createTime) values (#{id},#{name}, now())
 	</insert>
 
 	<select id="findByName" resultType="Tag">
-		select id, name, createTime from MEDIA_TAG where name = #{name}
+		select id, name, createTime from media_tag where name = #{name}
 	</select>
 	
 </mapper>

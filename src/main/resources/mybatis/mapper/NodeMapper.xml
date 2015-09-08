@@ -11,15 +11,15 @@
 	</resultMap>
 
 	<insert id="create">
-		insert into MEDIA_NODE (id,parentId,name,createTime) values (#{id},#{parentId}, #{name}, now())
+		insert into media_node (id,parentId,name,createTime) values (#{id},#{parentId}, #{name}, now())
 	</insert>
 
 	<delete id="delete">
-		delete from MEDIA_NODE where id = #{id}
+		delete from media_node where id = #{id}
 	</delete>
 
 	<update id="update">
-		update MEDIA_NODE set parentId = #{parentId}, name = #{name} where id = #{id} 
+		update media_node set parentId = #{parentId}, name = #{name} where id = #{id} 
 	</update> 
 
 	<select id="countChildren" resultType="Integer">
@@ -27,15 +27,15 @@
 	</select>
 
 	<select id="findById" resultType="Node">
-		select id, name, createTime from MEDIA_NODE where id = #{id}
+		select id, name, createTime from media_node where id = #{id}
 	</select>
 	
 	<select id="findChildren" resultMap="nodeResult">
-		select id, name, createTime from MEDIA_NODE where parentId = #{id}
+		select id, name, createTime from media_node where parentId = #{id}
 	</select>
 	
 	<select id="findByName" resultType="Node">
-		select * from MEDIA_NODE where name = #{name}
+		select * from media_node where name = #{name}
 	</select>
 	
 </mapper>
