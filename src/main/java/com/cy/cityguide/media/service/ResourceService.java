@@ -19,7 +19,7 @@ public interface ResourceService {
 	void update(List<UpdateResourceParameter> resources)
 			throws BadRequestBusinessException;
 
-	List<Resource> find(FindResourceParameter parameter)
+	List<Resource> find(FindResourceParameter parameter,String limit)
 			throws BadRequestBusinessException;
 	
 	Resource findResById(String id) 

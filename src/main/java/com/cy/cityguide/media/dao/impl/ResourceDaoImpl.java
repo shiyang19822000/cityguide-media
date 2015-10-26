@@ -7,12 +7,13 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.cy.cityguide.media.constant.Constant;
 import com.cy.cityguide.media.dao.ResourceDao;
 import com.cy.cityguide.media.parameter.CreateResourceParameter;
 import com.cy.cityguide.media.parameter.FindResourceParameter;
 import com.cy.cityguide.media.parameter.UpdateResourceParameter;
+import com.cy.cityguide.media.parameter.UploadMsgParameter;
 import com.cy.cityguide.media.result.Resource;
+import com.cy.cityguide.media.result.UploadMsgResult;
 
 @Repository
 public class ResourceDaoImpl implements ResourceDao {
@@ -41,16 +42,32 @@ public class ResourceDaoImpl implements ResourceDao {
 	}
 
 	@Override
-	public List<Resource> find(FindResourceParameter parameter) {
+	public List<Resource> find(FindResourceParameter parameter, int limit) {
 		Integer offSet = Integer.parseInt(parameter.getOffset().trim());
-		RowBounds rowBounds = new RowBounds(offSet, Constant.LIMIT);
+		RowBounds rowBounds = new RowBounds(offSet, limit);
 		return sqlSessionTemplate.selectList("ResourceDao.find", parameter, rowBounds);
 	}
 
 	@Override
 	public Resource findResById(String id) {
-		Resource res = sqlSessionTemplate.selectOne("ResourceDao.findById",id);
+		Resource res = sqlSessionTemplate.selectOne("ResourceDao.findById", id);
 		return res;
+	}
+
+	@Override
+	public void createUploadMsg(UploadMsgParameter uploadMsg) {
+		sqlSessionTemplate.insert("ResourceDao.createUploadMsg", uploadMsg);
+	}
+
+	@Override
+	public UploadMsgResult getUploadMsg(String uploadId) {
+		UploadMsgResult result = sqlSessionTemplate.selectOne("ResourceDao.findUploadMsgById", uploadId);
+		return result;
+	}
+
+	@Override
+	public void modifyUploadMsgStatus(UploadMsgParameter parameter) {
+		sqlSessionTemplate.update("ResourceDao.updateUploadMsgById", parameter);
 	}
 
 }

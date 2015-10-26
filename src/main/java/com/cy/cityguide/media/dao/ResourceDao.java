@@ -5,7 +5,9 @@ import java.util.List;
 import com.cy.cityguide.media.parameter.CreateResourceParameter;
 import com.cy.cityguide.media.parameter.FindResourceParameter;
 import com.cy.cityguide.media.parameter.UpdateResourceParameter;
+import com.cy.cityguide.media.parameter.UploadMsgParameter;
 import com.cy.cityguide.media.result.Resource;
+import com.cy.cityguide.media.result.UploadMsgResult;
 
 public interface ResourceDao {
 
@@ -17,8 +19,13 @@ public interface ResourceDao {
 
 	Integer countByNodeId(String nodeId);
 
-	List<Resource> find(FindResourceParameter parameter);
+	List<Resource> find(FindResourceParameter parameter,int limit);
 	
 	public Resource findResById(String id);
-
+	
+	void createUploadMsg(UploadMsgParameter uploadMsg);
+	
+	UploadMsgResult getUploadMsg(String uploadId);
+	
+	void modifyUploadMsgStatus(UploadMsgParameter parameter);
 }

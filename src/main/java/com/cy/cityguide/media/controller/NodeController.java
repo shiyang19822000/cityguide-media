@@ -2,6 +2,8 @@ package com.cy.cityguide.media.controller;
 
 import java.util.List;
 
+import javax.websocket.server.PathParam;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,21 +27,27 @@ public class NodeController {
 
 	@RequestMapping(value = "node", method = RequestMethod.POST)
 	@ResponseBody
-	public void create(@RequestBody List<CreateNodeParameter> nodes)
-			throws BadRequestBusinessException {
+	public void create(@RequestBody List<CreateNodeParameter> nodes) throws BadRequestBusinessException {
 		nodeService.create(nodes);
 	}
+
 	@ResponseBody
 	@RequestMapping(value = "node", method = RequestMethod.DELETE)
-	public void delete(@RequestBody List<String> ids)
-			throws BadRequestBusinessException {
+	public void delete(@RequestBody List<String> ids) throws BadRequestBusinessException {
 		nodeService.delete(ids);
 	}
+
 	@ResponseBody
 	@RequestMapping(value = "node", method = RequestMethod.PUT)
-	public void update(@RequestBody List<UpdateNodeParameter> nodes)
-			throws BadRequestBusinessException {
+	public void update(@RequestBody List<UpdateNodeParameter> nodes) throws BadRequestBusinessException {
 		nodeService.update(nodes);
+	}
+
+	@RequestMapping(value = "node", method = RequestMethod.GET)
+	public @ResponseBody Node findNodeByParrmeter(@PathParam(value = "id") String id,
+			@PathParam(value = "path") String path) throws BadRequestBusinessException {
+		Node node = nodeService.findNodeByParrmeter(id, path);
+		return node;
 	}
 
 	@RequestMapping(value = "node/{id}/children", method = RequestMethod.GET)

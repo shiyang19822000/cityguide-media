@@ -18,7 +18,6 @@ public class FindResourceParameter {
 
 	private String offset;
 
-
 	public String getNodeId() {
 		return nodeId;
 	}

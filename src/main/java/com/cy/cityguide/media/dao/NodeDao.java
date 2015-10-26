@@ -17,6 +17,8 @@ public interface NodeDao {
 	Integer countChildren(String id);
 
 	Node findById(String id);
+	
+	Node findNodeByParrmeter(Node node);
 
 	List<Node> findChildren(String id);
 	

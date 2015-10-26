@@ -52,5 +52,10 @@ public class NodeDaoImpl implements NodeDao {
 		return sqlSessionTemplate.selectList("NodeDao.findByName",name);
 	}
 
+	@Override
+	public Node findNodeByParrmeter(Node node) {
+		return sqlSessionTemplate.selectOne("NodeDao.findByParameter",node);
+	}
+
 
 }

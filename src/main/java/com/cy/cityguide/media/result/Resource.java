@@ -13,6 +13,10 @@ public class Resource {
 	private String name;
 
 	private String keyWord;
+	
+	private String bucket;
+	
+	private String resourceUrl;
 
 	private Date createTime;
 
@@ -66,4 +70,20 @@ public class Resource {
 		this.nodeId = nodeId;
 	}
 
+	public String getBucket() {
+		return bucket;
+	}
+
+	public void setBucket(String bucket) {
+		this.bucket = bucket;
+	}
+
+	public String getResourceUrl() {
+		return resourceUrl;
+	}
+
+	public void setResourceUrl(String resourceUrl) {
+		this.resourceUrl = resourceUrl;
+	}
+	
 }

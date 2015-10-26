@@ -16,6 +16,8 @@ public class CreateResourceParameter {
 
 	private List<String> tags;
 	
+	private String bucket;
+	
 	public String getId() {
 		return id;
 	}
@@ -63,6 +65,20 @@ public class CreateResourceParameter {
 
 	public void setTags(List<String> tags) {
 		this.tags = tags;
+	}
+
+	public String getBucket() {
+		return bucket;
+	}
+
+	public void setBucket(String bucket) {
+		this.bucket = bucket;
+	}
+
+	@Override
+	public String toString() {
+		return "CreateResourceParameter [id=" + id + ", nodeId=" + nodeId + ", type=" + type + ", name=" + name
+				+ ", keyWord=" + keyWord + ", tags=" + tags + ", bucket=" + bucket + "]";
 	}
 
 }

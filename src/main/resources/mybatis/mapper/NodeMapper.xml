@@ -7,11 +7,13 @@
 	<resultMap id="nodeResult" type="Node">
 		<id property="id" column="id" />
 		<result property="name" column="name" />
+		<result property="parentId" column="parentId"/>
+		<result property="path" column="path"/>
 		<result property="createTime" column="createTime" />
 	</resultMap>
 
 	<insert id="create">
-		insert into media_node (id,parentId,name,createTime) values (#{id},#{parentId}, #{name}, now())
+		insert into media_node (id,parentId,name,path,createTime) values (#{id},#{parentId},#{name},#{path},now())
 	</insert>
 
 	<delete id="delete">
@@ -19,23 +21,47 @@
 	</delete>
 
 	<update id="update">
-		update media_node set parentId = #{parentId}, name = #{name} where id = #{id} 
+		update media_node 
+		<set>
+			<if test="parentId != null and parentId !='' ">
+				parentId = #{parentId},
+			</if>
+			<if test="name != null and name !='' ">
+				name = #{name},
+			</if>
+			<if test="path != null and path !='' ">
+				path=#{path},
+			</if>
+		</set>
+		where id = #{id} 
 	</update> 
 
 	<select id="countChildren" resultType="Integer">
-		select count(1) from MEDIA_NODE where parentId = #{id}
+		select count(1) from media_node where parentId = #{id}
 	</select>
 
 	<select id="findById" resultType="Node">
-		select id, name, createTime from media_node where id = #{id}
+		select id,name,parentId,path,createTime from media_node where id = #{id}
 	</select>
 	
 	<select id="findChildren" resultMap="nodeResult">
-		select id, name, createTime from media_node where parentId = #{id}
+		select id,name,parentId,path,createTime from media_node where parentId = #{id}
 	</select>
 	
 	<select id="findByName" resultType="Node">
 		select * from media_node where name = #{name}
+	</select>
+	
+	<select id="findByParameter" resultType="Node">
+		select id,name,parentId,path,createTime from media_node
+		<where>
+		<if test=" id != null and id !='' ">
+			id = #{id}
+		</if>
+		<if test="path != null and path !='' ">
+			and path =#{path}
+		</if>
+		</where>
 	</select>
 	
 </mapper>

@@ -9,16 +9,14 @@ import com.cy.cityguide.media.result.Node;
 
 public interface NodeService {
 
-	void create(List<CreateNodeParameter> nodes)
-			throws BadRequestBusinessException;
+	void create(List<CreateNodeParameter> nodes) throws BadRequestBusinessException;
 
-	void delete(List<String> ids) 
-			throws BadRequestBusinessException;
+	void delete(List<String> ids) throws BadRequestBusinessException;
 
-	void update(List<UpdateNodeParameter> nodes)
-			throws BadRequestBusinessException;
+	void update(List<UpdateNodeParameter> nodes) throws BadRequestBusinessException;
 
-	List<Node> findChildren(String id) 
-			throws BadRequestBusinessException;
+	Node findNodeByParrmeter(String id, String path) throws BadRequestBusinessException;
+
+	List<Node> findChildren(String id) throws BadRequestBusinessException;
 
 }

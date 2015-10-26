@@ -14,7 +14,7 @@
 	</resultMap>
 
 	<insert id="create">
-		insert into media_resource (id,nodeId,type,name,keyWord,createTime) values (#{id},#{nodeId}, #{type}, #{name},#{keyWord}, now())
+		insert into media_resource (id,nodeId,type,name,keyWord,bucket,createTime) values (#{id},#{nodeId}, #{type}, #{name},#{keyWord},#{bucket},now())
 	</insert>
 
 	<delete id="delete">
@@ -22,7 +22,7 @@
 	</delete>
 
 	<update id="update">
-		UPDATE media_resource 
+		update media_resource 
 		<set>
 			<if test="nodeId != null">
 				nodeId = #{nodeId},
@@ -34,10 +34,13 @@
 				name = #{name},
 			</if>
 			<if test="keyWord !=null ">
-				keyWord = #{keyWord},
+				keyword = #{keyWord},
+			</if>
+			<if test="bucket !=null" >
+				bucket = #{bucket},
 			</if>
 		</set> 
-		WHERE ID = #{id}
+		where id = #{id}
 	</update>
 
 	<select id="countByNodeId" resultType="Integer">
@@ -46,28 +49,39 @@
 	
 	<select id="find" resultMap="resourceResult">
 		<bind name="namePattern" value="'%' + _parameter.getName() + '%'" />
-		SELECT DISTINCT R.ID,R.NODEID, R.TYPE, R.NAME, R.KEYWORD, R.CREATETIME FROM media_resource R
+		select distinct r.id,r.nodeid, r.type, r.name, r.keyword,r.bucket, r.createtime from media_resource r
 		<where>
 			<if test="nodeId != null and nodeId !='' ">
-				R.NODEID = #{nodeId}
+				r.nodeid = #{nodeId}
 			</if>
 			<if test="type != null and type !='' ">
-				AND R.TYPE = #{type}
+				and r.type = #{type}
 			</if>
 			<if test="name != null  and name !='' and name.trim()!=''">
-				AND R.NAME LIKE #{namePattern}
+				and r.name like #{namepattern}
 			</if>
 			<if test="startTime != null and endTime != null and startTime.toString().trim()!='' and endTime.toString().trim()!=''">
-				AND R.CREATETIME BETWEEN #{startTime} AND #{endTime}
+				and r.createtime between #{starttime} and #{endtime}
 			</if>
 			<if test="tag != null and tag!='' and tag.trim()!=''">
-				AND R.ID IN (SELECT RESOURCEID FROM media_resourcetag WHERE TAGID IN(SELECT ID FROM media_tag WHERE NAME = #{tag}))
+				and r.id in (select resourceid from media_resourcetag where tagid in(select id from media_tag where name = #{tag}))
 			</if>
 		</where>
 	</select>
 	
 	<select id="findById" resultType="Resource">
-		select id,nodeid,type,name,keyword,createtime from media_resource where id = #{id}
+		select id,nodeid,type,name,keyword,bucket,createtime from media_resource where id = #{id}
 	</select>
 	
+	<insert id="createUploadMsg" >
+		insert into media_upload (uploadId,status,initPath,type,createTime) values (#{uploadId},#{status},#{initPath},#{type},now())
+	</insert>
+	
+	<select id="findUploadMsgById" resultType="UploadMsgResult">
+		select uploadId,status,initPath,type,createTime from media_upload where uploadId = #{uploadId}
+	</select>
+	
+	<update id="updateUploadMsgById">
+		update media_upload set status = #{status} where uploadId = #{uploadId}
+	</update>
 </mapper>

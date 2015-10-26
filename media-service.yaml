@@ -3,9 +3,9 @@ swagger: "2.0"
 info:
   title: City Guide Media Service API
   description: Node And Resource API
-  version: 0.0.1
-host: localhost:8080
-basePath: /cityguide-media
+  version: 0.0.2
+host: api.12301.io
+basePath: /v1/media-service
 schemes:
   - http
 produces:
@@ -50,16 +50,32 @@ paths:
       parameters:
         - name: nodes 
           in: body
-          description: 修改节点参数
+          description: 修改节点参数(只修改传入的参数)
           required: true
           schema:
             type: array
-            description: 节点参数
+            description: 节点参数(只修改传入的参数)
             items:
               $ref: "#/definitions/UpdateNodeParameter"
       responses:
         200:
           description: OK
+    get:
+      description: 通过id或path获取节点信息
+      parameters:
+        - name: id 
+          in: query 
+          type: string
+          description: 节点ID
+        - name: path 
+          in: query
+          type: string
+          description: 节点路径
+      responses:  
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Node"
   /node/{node-id}/children:
     get:
       description: 查找子节点
@@ -113,7 +129,7 @@ paths:
           required: true
           schema:
             type: array
-            description: 资源
+            description: 资源(只修改传入的参数)
             items:
               $ref: "#/definitions/UpdateResourceParameter"
       responses:
@@ -124,20 +140,20 @@ paths:
       parameters:
         - name: nodeId 
           in: query
-          description: 节点ID
+          description: 所属节点ID
           type: string
         - name: type
           in: query
-          description: 节点类型
+          description: 资源类型
           type: integer
           format: int32
         - name: name
           in: query
-          description: 节点名称
+          description: 资源名称
           type: string
         - name: tag
           in: query
-          description: 节点标签
+          description: 资源标签
           type: string
         - name: startTime
           in: query
@@ -150,7 +166,12 @@ paths:
           type: string
           format: date-time
         - name: offset
-          description: 分页查询的起始位置,从0开始
+          description: 分页查询的起始位置(不传该参数默认查询从0开始)
+          in: query
+          type: integer
+          format: int32
+        - name: limit
+          description: 查询的条数(不传该参数默认返回10条)
           in: query
           type: integer
           format: int32
@@ -172,7 +193,73 @@ paths:
           description: OK
           schema:
             $ref: "#/definitions/Resource"
-        
+  /res-upload:
+    get:
+      summary: 初始化分片上传
+      description: 通过文件路径和类型初始化一个上传
+      parameters:
+        - name: path 
+          required: true
+          in: query
+          description: 文件上传对应路径值，含文件名(如:北京/奥林匹克公园/123.jpg,节点关系用/来隔开)
+          type: string
+        - name: contenttype
+          required: true
+          in: query
+          description: 文件的格式(1:文本类型 2:图片类型 3:音频类型 4:视频文件 5:其他)
+          type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/InitUploadResult"
+    post:
+      summary: 完成分片上传
+      description: 通过etag将上传的分片进行合并
+      parameters:
+        - name: finishUploadParameters
+          in: body
+          description: 完成分片合并对应参数
+          required: true
+          schema:
+            type: object
+            description: 合并参数
+            $ref: "#/definitions/FinishUploadParameter"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            description: 资源
+            $ref: "#/definitions/FinishUploadResult"        
+    delete:
+      summary: 放弃分片上传(暂不可用)
+      description: 通过uploadId和key取消一个上传
+      parameters:
+        - name: uploadId 
+          in: query
+          description: 取消上传的uploadId
+          type: string
+      responses:
+        200:
+          description: OK
+  /res-upload-status:
+    get:
+      summary: 获取上传是否失效
+      description: 通过uploadId获取该次上传是否可以续传
+      parameters:
+        - name: uploadId
+          in: query
+          required: true
+          description: 上传的uploadId
+          type: string
+      responses:
+        200:
+          description: ok
+          schema:
+            type: integer
+            format: int32
+            description: (就绪状态表示可以续传)0:就绪 1:已完成 2:已放弃 3:已过期
 definitions:
   Node:
     type: object
@@ -184,6 +271,12 @@ definitions:
       name:
         type: string
         description: 名称
+      parentId: 
+        type: string
+        description: 父节点id
+      path:
+        type: string 
+        description: 路径(不包含根节点)
       createTime:
         type: string
         format: date-time
@@ -198,6 +291,9 @@ definitions:
       parentId:
         type: string
         description: 父节点id
+      path:
+        type: string
+        description: 节点的路径
   UpdateNodeParameter:
     type: object
     description: 参数
@@ -211,6 +307,9 @@ definitions:
       parentId:
         type: string
         description: 父节点id
+      path:
+        type: string
+        description: 节点的路径
   Resource:
     type: object
     description: 资源
@@ -230,7 +329,13 @@ definitions:
         description: 类型  
       keyWord:
         type: string
-        description: keyWord  
+        description: keyWord
+      bucket: 
+        type: string
+        description: 所属bucket的信息
+      resourceUrl:
+        type: string
+        description: 资源URL
       createTime:
         type: string
         format: date-time
@@ -241,50 +346,107 @@ definitions:
     properties:
       nodeId:
         type: string
-        description: nodeId  
+        description: 资源对应的节点ID  
       type:
         type: integer
         format: int32
-        description: 类型  
+        description: 资源类型(1:文本 2:图片 3:音频 4:视频)  
       name:
         type: string
-        description: 名称
+        description: 资源名称
       keyWord:
         type: string
-        description: keyWord 
+        description: 资源路径
+      bucket:
+        type: string
+        description: 所属的bucket
       tags:
         type: array
-        description: tags
+        description: 资源标签数组
         items:
           type: string
-          description: tag
+          description: 资源标签
   UpdateResourceParameter:
     type: object
     description: 参数
     properties:
       id:
         type: string
-        description: id
+        description: 资源ID
       nodeId:
-        type: integer
-        format: int64
-        description: nodeId  
+        type: string
+        description: 节点ID 
       type:
         type: integer
         format: int32
-        description: 类型  
+        description: 资源类型(1:文本 2:图片 3:音频 4:视频) 
       name:
         type: string
         description: 名称
       keyWord:
         type: string
-        description: keyWord  
+        description: 资源路径 
+      bucket:
+        type: string
+        description: 所属的bucket
       tags:
         type: array
-        description: tags
+        description: 标签数组(新的标签数据会取代以前的标签数组,没设置默认用以前的标签数组)
         items:
           type: string
-          description: tag
+          description: 标签
+  InitUploadResult:
+    type: object
+    description: 初始化上传的返回值
+    properties:
+      uploadId:
+        type: string
+        description: 初始化返回的uploadId
+      blockSize:
+        type: integer
+        format: int32
+        description: 本次初始化的块的大小
+      authorization:
+        type: string
+        description: 用于上传分片的签名参数
+      contentType: 
+        type: string
+        description: 文件类型
+      bucketName:
+        type: string
+        description: bucketName
+      uploadPartUrl:
+        type: string
+        description: 上传分片的url
+  FinishUploadParameter:
+    type: object
+    description: 完成上传对应的参数
+    properties:
+      uploadId:
+        type: string
+        description: 完成上传的uploadId
+      etags:
+        type: array
+        items: 
+          type: string
+          description: 上传的分片对应的每一片的etag
+  FinishUploadResult:
+    type: object
+    description: 完成分片上传的返回值
+    properties:
+      resourceId:
+        type: string
+        description: 上传完成数据库resourceId
+      key:
+        type: string
+        description: 本次上传对应的key
+      fileSize:
+        type: integer
+        format: int64
+        description: 文件上传后的大小
+      resourceUrl:
+        type: string
+        description: 文件url
 parameters:
   node-id:
     name: node-id
@@ -298,4 +460,3 @@ parameters:
     description: 资源id
     required: true
     type: string
-

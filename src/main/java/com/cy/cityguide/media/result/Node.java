@@ -8,7 +8,11 @@ public class Node {
 
 	private String name;
 
+	private String parentId;
+	
 	private Date createTime;
+	
+	private String path;
 
 
 	public String getId() {
@@ -35,4 +39,28 @@ public class Node {
 		this.createTime = createTime;
 	}
 
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public String getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+
+	@Override
+	public String toString() {
+		return "Node [id=" + id + ", name=" + name + ", parentId=" + parentId + ", createTime=" + createTime + ", path="
+				+ path + "]";
+	}
+	
+	
+	
 }

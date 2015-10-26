@@ -7,6 +7,8 @@ public class CreateNodeParameter {
 	private String name;
 
 	private String parentId;
+	
+	private String path;
 
 	public String getId() {
 		return id;
@@ -32,11 +34,18 @@ public class CreateNodeParameter {
 		this.parentId = parentId;
 	}
 
+	
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
 	@Override
 	public String toString() {
-		return "CreateNodeParameter [id=" + id + ", name=" + name + ", parentId=" + parentId + "]";
+		return "CreateNodeParameter [id=" + id + ", name=" + name + ", parentId=" + parentId + ", path=" + path + "]";
 	}
-	
-	
 
 }
