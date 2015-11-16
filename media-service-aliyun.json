@@ -1,8 +1,9 @@
-{
+{	 
+	"constraints": [["net", "CLUSTER", "1m"]],
 	"container":{
 		"type":"DOCKER",
 		"docker":{
-			"image":"registry.12301.io/media-service:v12",
+			"image":"registry.12301.io/media-service:v13",
 			"network":"BRIDGE",
 			"portMappings":[
 				{
@@ -16,11 +17,11 @@
 	},
 	"id":"media-service",
 	"instances":1,
-	"cpus":1,
+	"cpus":0.1,
 	"mem":512,
 	"env":{
-		"MARATHON":"10.10.115.48:8080",
-		"database_url":"jdbc:mysql://10.10.133.163/web12301?useUnicode=true&characterEncoding=utf8",
+		"MARATHON":"10.175.203.123:8080",
+		"database_url":"jdbc:mysql://rdsbqrd8yc4vrb3wkz439.mysql.rds.aliyuncs.com/web12301?useUnicode=true&characterEncoding=utf8",
 		"database_username":"web12301",
 		"database_password":"msQw4xgse4aioz",
 		"bucket_name":"testimage"

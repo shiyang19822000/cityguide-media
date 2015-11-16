@@ -71,7 +71,6 @@ public class UploadServiceImpl implements UploadService {
 	}
 
 	private int getResourceType(String content) {
-		System.err.println(content);
 		if (content.equals("1")) {
 			return Constant.ResourceType.TEXT;
 		} else if (content.equals("2")) {
@@ -212,7 +211,6 @@ public class UploadServiceImpl implements UploadService {
 				throw new BadRequestBusinessException("failed: " + str);
 			} else {
 				String[] nodesName = path.split("/");
-				// website/test/aa.jpg
 				if (nodesName.length > 2) {
 					String firstNodeName = nodesName[0];
 					List<Node> findFirstNodes = nodeDao.findByName(firstNodeName);
